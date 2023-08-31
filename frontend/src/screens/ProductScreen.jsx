@@ -13,6 +13,7 @@ import {
 import Rating from "../components/Rating";
 import { useGetProductDetailsQuery } from "../slices/productsApiSlice";
 import Loader from "../components/Loader";
+import Message from "../components/Message";
 
 function ProductScreen() {
   const { id: productID } = useParams();
@@ -25,15 +26,18 @@ function ProductScreen() {
 
   return (
     <>
+      <Link className="btn btn-warning my-3" to="/">
+        Go Back
+      </Link>
+
       {isLoading ? (
         <Loader />
       ) : error ? (
-        <div>{error?.data?.message || error.error}</div>
+        <Message varient="danger">
+          {error?.data?.message || error.error}
+        </Message>
       ) : (
         <>
-          <Link className="btn btn-warning my-3" to="/">
-            Go Back
-          </Link>
           <Row>
             <Col md={5}>
               <Image src={product.image} alt={product.name} fluid />
