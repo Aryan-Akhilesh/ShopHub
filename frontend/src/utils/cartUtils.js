@@ -1,4 +1,4 @@
-const addDecimal = (num) => {
+export const addDecimal = (num) => {
   return num.toFixed(2);
 };
 
@@ -22,4 +22,6 @@ export const updateCart = (state) => {
   );
 
   localStorage.setItem("cart", JSON.stringify(state));
+
+  return state;
 };
