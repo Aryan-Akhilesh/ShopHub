@@ -51,7 +51,6 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Invalid User data");
   }
-  res.send("Register User");
 });
 
 //@desc     logout user / clear cookie
@@ -67,6 +66,19 @@ const logoutUser = asyncHandler(async (req, res) => {
 //@route    GET api/users/profile
 //@access   Private
 const getUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    res.status(200).json({
+      name: user.name,
+      id: user._id,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    });
+  } else {
+    res.status(400);
+    throw new Error("User not found");
+  }
   res.send("Get User Profile");
 });
 
@@ -74,7 +86,28 @@ const getUserProfile = asyncHandler(async (req, res) => {
 //@route    PUT api/users/profile
 //@access   Private
 const updateUserProfile = asyncHandler(async (req, res) => {
-  res.send("Update User Profile");
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+
+    const updatedUser = await user.save();
+
+    res.status(200).json({
+      id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+    });
+  } else {
+    res.status(400);
+    throw new Error("User not found");
+  }
 });
 
 //@desc     Get users
